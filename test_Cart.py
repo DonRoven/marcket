@@ -48,26 +48,6 @@ class CartTestCase(unittest.TestCase):
         item = Item('item100500', 42)
         self.assertIs(self.cart.add(item, 1), None)
 
-    def test_len(self):
-        self.assertEqual(len(self.cart), 0)
-        item1 = Item('item1', 10)
-        item2 = Item('item2', 20)
-        self.cart.add(item1, 1)
-        self.cart.add(item2, 2)
-        self.assertEqual(len(self.cart), 2)
-
-    def test_total_gt(self):
-        self.cart.add(Item('item1', 10), 2)
-        self.assertEquals(self.cart.total_qt(), 2)
-        self.cart.add(Item('item2', 20), 5)
-        self.assertEqual(self.cart.total_qt(), 7)
-
-    def test_iteration(self):
-        self.cart.add(Item('item1', 10), 1)
-        self.cart.add(Item('item2', 20), 2)
-        self.assertEqual(sum(i.price for i in self.cart), 30)
-
-
     def test_add_same(self):
         item1 = Item('item1', 10)
         item2 = Item('item1', 10)
@@ -75,16 +55,22 @@ class CartTestCase(unittest.TestCase):
         self.cart.add(item2)
         self.assertEqual(len(self.cart._items), 1)
 
-    def test_discount_gt_1000(self):
-        self.cart.add(Item('item1', 200), 5)
-        self.assertEqual(self.cart.discount(), 50)
+    def test_cart_len(self):
+        self.assertEqual(len(self.cart), 0)
+        self.cart.add(Item('item1', 10))
+        self.assertEqual(len(self.cart), 1)
 
-    def test_discount_it_1000(self):
-        self.cart.add(Item('item1', 10), 10)
-        self.assertEqual(self.cart.discount(), 3)
+    def test_cart_qt(self):
+        self.assertEqual(self.cart.total_qt(), 0)
+        self.cart.add(Item('item1', 10), 2)
+        self.assertEqual(self.cart.total_qt(), 2)
+        self.cart.add(Item('item2', 20), 5)
+        self.assertEqual(self.cart.total_qt(), 7)
 
-
-
+    def test_iteration(self):
+        self.cart.add(Item('item1', 10), 1)
+        self.cart.add(Item('item2', 20), 2)
+        self.assertEqual(sum(i.price for i in self.cart), 30)
 
 if __name__ == '__main__':
     unittest.main()

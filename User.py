@@ -1,25 +1,14 @@
-#class Password():
-#    def __get__(self, obj, objtype):
-#        print('Calling __get__')
-#        print('obj is {}'.format(obj))
-#        print('odjtype is {}'.format(objtype))
-#        return 42
-#
-#    def __set__(self, obj, value):
-#        print('Calling __set__')
-#        print('obj is {}'.format(obj))
-#        print('value is {}'.format(value))
+from hashlib import md5
 
-#    def __del__(self):
-#        print('Calling __get__')
-#        print('obj is {}'.format(obj))
-#        print('objtype is {}'.format(objtype))
 
-class User:
+class User(object):
     """
-    Basic class for web shop customer
+    Basic class for web shop customer. Optional arguments handled via
+        `optional_fields`. No data validation so far.
+    Password is never stored in plain texts. Settings password triggers
+        descriptor hashing it with md5 algorithm and storing only hash
     """
-    optional_fields = {'email', 'fname', 'lname', 'address', 'bd', 'phone'}
+    optional_fields = {'email', 'fname', 'lname', 'address', 'bday', 'phone'}
 
     def __init__(self, username, password, **kwargs):
         self.username = username
@@ -28,23 +17,10 @@ class User:
             if field in User.optional_fields:
                 setattr(self, field, kwargs[field])
 
-#    def set_password(self, password):
-#       self.pass_hash = hash(password)
-
-#    def get_password(self):
-#        return '<Password with hash {}>'.format(self.pass_hash)
-
-#    password = property(get_password, set_password)
-
     @property
     def password(self):
         return '<Password with hash {}>'.format(self.pass_hash)
 
     @password.setter
     def password(self, value):
-        self.pass_hash = hash(value)
-
-#user = User('name', 'askfgha')
-#print(user.password)
-#user.password = 'askfgha2'
-#print(user.password)
+        self.pass_hash = md5(value.encode()).hexdigest()
